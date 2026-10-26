@@ -1,0 +1,5 @@
+ HERO ICON
+ For heroicons, sizing using the 'size' prop doesn't work. Only sizing with 'className' does.
+
+ LUCIDE REACT ICON
+For Lucide react, sizing with both 'className' and 'size' works. However, className takes precedence.

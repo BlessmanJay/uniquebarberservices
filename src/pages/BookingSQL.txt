@@ -1,0 +1,91 @@
+
+CREATE TABLE public.appointments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+  customer_name TEXT NOT NULL,
+  service TEXT NOT NULL,
+  appointment_date DATE NOT NULL,
+  appointment_time TIME NOT NULL,
+  phone TEXT NOT NULL,
+
+  status TEXT NOT NULL DEFAULT 'pending'
+    CHECK (status IN ('pending', 'confirmed', 'cancelled')),
+
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+  CONSTRAINT valid_service CHECK (
+    service IN (
+      'haircut',
+      'haircut-n-dyeing',
+      'edge-up',
+      'edge-up-n-dyeing',
+      'edge-up-n-shaving',
+      'edge-up-shaving-n-dyeing',
+      'shaving',
+      'beard',
+      'both'
+
+
+    )
+  ),
+
+  CONSTRAINT valid_appointment_time CHECK (
+    appointment_time >= TIME '08:00'
+    AND appointment_time <= TIME '20:00'
+  )
+);
+
+-- Prevent duplicate active bookings for the same slot.
+CREATE UNIQUE INDEX unique_active_appointment_slot
+ON public.appointments (appointment_date, appointment_time)
+WHERE status IN ('pending', 'confirmed');
+
+-- Enable Row Level Security.
+ALTER TABLE public.appointments ENABLE ROW LEVEL SECURITY;
+
+-- Allow the public booking form to check availability
+-- without exposing customers' names or phone numbers.
+REVOKE ALL ON public.appointments FROM anon, authenticated;
+
+GRANT INSERT (
+  customer_name,
+  service,
+  appointment_date,
+  appointment_time,
+  phone
+) ON public.appointments TO anon;
+
+GRANT SELECT (
+  appointment_date,
+  appointment_time,
+  status
+) ON public.appointments TO anon;
+
+CREATE POLICY "Public can check appointment availability"
+ON public.appointments
+FOR SELECT
+TO anon
+USING (status IN ('pending', 'confirmed'));
+
+CREATE POLICY "Public can submit appointment requests"
+ON public.appointments
+FOR INSERT
+TO anon
+WITH CHECK (
+  status = 'pending'
+  AND appointment_date >= CURRENT_DATE
+  AND appointment_time >= TIME '08:00'
+  AND appointment_time <= TIME '20:00'
+);
+
+
+Haircut — ₦2000
+Haircut & Dyeing — ₦3000
+Edge-up — ₦1000
+Haircut & Beard Care — ₦4000
+Edge-up & Dyeing — ₦2000
+Edge-up & Trimming — ₦1500
+Dyeing black — ₦1500
+Shaving — ₦1000
+Beard Care — ₦2000
+Tints/Colour Dyeing — ₦7000
