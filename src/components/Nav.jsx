@@ -14,7 +14,7 @@ function Nav() {
   const { isOpen, setIsOpen } = useNavContext();
 
   return (
-    <nav className="sticky top-0 z-100 mx-4 mt-4 h-full bg-white flex flex-col md:mx-6 md:mt-6 md:grid md:grid-cols-[9fr_repeat(4,1fr)] md:items-center md:gap-4">
+    <nav className="sticky top-0 z-100 border-b border-b-white/10 bg-[#1e293b]/95 backdrop-blur-md mx-4 mt-4 h-full flex flex-col md:mx-6 md:mt-6 md:grid md:grid-cols-[9fr_repeat(4,1fr)] md:items-center md:gap-4">
       {/* Header and Hamburger menu */}
       <div className="relative mb-8">
         <NavLink
