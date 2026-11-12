@@ -14,7 +14,7 @@ function Nav() {
   const { isOpen, setIsOpen } = useNavContext();
 
   return (
-    <nav className="sticky top-0 z-50 mx-4 mt-4 flex flex-col md:mx-6 md:mt-6 md:grid md:grid-cols-[9fr_repeat(4,1fr)] md:items-center md:gap-4">
+    <nav className="mx-4 mt-4 h-full bg-white flex flex-col md:mx-6 md:mt-6 md:grid md:grid-cols-[9fr_repeat(4,1fr)] md:items-center md:gap-4">
       {/* Header and Hamburger menu */}
       <div className="relative mb-8">
         <NavLink
@@ -44,7 +44,7 @@ function Nav() {
       </div>
 
       <div
-        className={`${isOpen ? "flex" : "hidden"} flex-col gap-6 md:flex md:flex-row`}
+        className={`${isOpen ? "flex" : "hidden"} h-full bg-white z-100 flex-col gap-6 md:flex md:flex-row`}
       >
         <NavLink
           to="/about"
